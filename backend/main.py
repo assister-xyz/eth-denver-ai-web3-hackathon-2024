@@ -3,11 +3,8 @@ from openai import OpenAI
 from pinecone import Pinecone
 import os
 from dotenv import load_dotenv
-from transformers import BertModel, BertTokenizer
-import torch
 import redis
 from utlis.prompt_templates import general_qa_prompt_template
-from langchain.chains import LLMChain
 from config import EMBEDDING_MODEL
 load_dotenv()
 
@@ -19,8 +16,7 @@ PINECONE_HOST = os.getenv('PINECONE_HOST')
 PINECONE_INDEX_NAME = os.getenv('PINECONE_INDEX_NAME')
 
 pc = Pinecone(api_key=PINECONE_API_KEY)
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertModel.from_pretrained('bert-base-uncased')
+
 r = redis.Redis(host='localhost', port=6379, db=0, charset="utf-8", decode_responses=True)
 
 
@@ -36,14 +32,6 @@ def get_embedding(text, model):
     client = OpenAI(api_key = OPENAI_API_KEY)
     text = text.replace("\n", " ")
     return client.embeddings.create(input = [text], model=model).data[0].embedding
-
-def get_embedding_bert(text):
-    encoded_input = tokenizer(text, return_tensors='pt', padding=True, truncation=True, max_length=512)
-    with torch.no_grad():
-        model_output = model(**encoded_input)
-
-    embeddings = model_output.last_hidden_state.mean(dim=1).squeeze().numpy()
-    return embeddings.tolist()
 
 
 @app.route('/query', methods=['POST'])
