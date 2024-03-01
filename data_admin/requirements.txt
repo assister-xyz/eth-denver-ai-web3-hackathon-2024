@@ -1,0 +1,10 @@
+flask
+beautifulsoup4
+python-dotenv
+redis
+pinecone-client
+openai
+pandas
+tiktoken==0.1.1
+langchain
+streamlit

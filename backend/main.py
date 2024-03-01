@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, Response
+from flask import Flask, request, Response
 import json
 from openai import OpenAI
 from pinecone import Pinecone
@@ -44,10 +44,11 @@ def generate_stream(prompt):
     results = []
     for result in query_results['matches']:
         most_similar_id = result['id']
+        print(most_similar_id)
         value_from_redis = get_redis_value_by_id(most_similar_id)
         results.append(value_from_redis)
     result_context = ''.join(results)
-    
+        
     general_prompt = general_qa_prompt_template.format(client="Near", user_query=prompt, contexts=result_context)
     client = OpenAI(api_key = OPENAI_API_KEY)
 

@@ -12,34 +12,34 @@ load_dotenv()
 
 STACK_EXCHANGE_API_KEY = os.getenv("STACK_EXCHANGE_API_KEY")
 
-def fetch_stackoverflow_questions(tag):
+
+def fetch_stackoverflow_questions(tag, max_questions=None):
     api_url = "https://api.stackexchange.com/2.3/questions"
-    
+
     params = {
-        "pagesize": 100,  
+        "pagesize": 10,
         "order": "desc",
         "sort": "creation",
         "tagged": tag,
         "site": "stackoverflow",
-        "filter": "withbody",  
-        "key": STACK_EXCHANGE_API_KEY 
+        "filter": "withbody",
+        "key": STACK_EXCHANGE_API_KEY
     }
 
     all_questions = []
-
-    has_more = True
-    page = 1
+    page = 1 
+    total_questions_fetched = 0
 
     try:
-        while has_more:
+        while (not max_questions or total_questions_fetched < max_questions):
             params["page"] = page
             response = requests.get(api_url, params=params)
 
-            if response.status_code == 200:
+            if response.status_code == 200 and len(response.json()["items"]) != 0:
                 data = response.json()
-                all_questions.extend(data["items"])
-
-                has_more = data["has_more"]
+                fetched_questions = data["items"]
+                total_questions_fetched += len(fetched_questions)
+                all_questions.extend(fetched_questions)
                 page += 1
             else:
                 print("Error fetching questions:", response.status_code)
@@ -48,7 +48,8 @@ def fetch_stackoverflow_questions(tag):
     except Exception as e:
         print("Exception while fetching questions:", str(e))
 
-    return all_questions[:50]
+    return all_questions[:max_questions] if max_questions else all_questions
+
 
 def get_accepted_answer(question_id):
     api_url = f"https://api.stackexchange.com/2.3/questions/{question_id}/answers"
@@ -67,12 +68,14 @@ def get_accepted_answer(question_id):
 
         if response.status_code == 200:
             data = response.json()
+            
             if len(data["items"]) > 0:
                 accepted_answers = [a for a in data["items"] if a.get("is_accepted", False)]
                 if accepted_answers:
                     return accepted_answers[0]
                 else:
                     return data["items"][0]
+                
         else:
             print("Error fetching answer for question:", response.status_code)
             print("Response:", response.text)
@@ -90,9 +93,9 @@ def process_body(body):
         li_tag.string = f"- {li_tag.text}"
     return soup.get_text()
 
-def create_dataframe(tag):
-    data = []
-    questions = fetch_stackoverflow_questions(tag)
+def create_dataframe(questions):
+    question_with_answers= []
+    question_without_answers= []
     total_questions = len(questions)
     print("There are", total_questions, "questions")
 
@@ -105,7 +108,7 @@ def create_dataframe(tag):
             answer_text = process_body(accepted_answer['body'])
             content_hash = hashlib.sha256(f"{question_text}{answer_text}".encode()).hexdigest()
 
-            data.append({
+            question_with_answers.append({
                 'question_id': f"{question['question_id']}",
                 'question_author': question_author,
                 'question': question_text,
@@ -113,14 +116,21 @@ def create_dataframe(tag):
                 'answer': answer_text,
                 'hash': content_hash
             })
-
-        # Print progress
+        else:
+            question_author = question['owner']['link']
+            question_text = process_body(question['body'])
+            question_without_answers.append({
+                'question_id': f"{question['question_id']}",
+                'question_author': question_author,
+                'question': question_text,
+            })
         print(f"Processed: {i}/{total_questions}", end="\r")
 
     print("\nProcessing complete.")
 
-    df = pd.DataFrame(data)
-    return df
+    df_with_answers = pd.DataFrame(question_with_answers)
+    df_without_answers = pd.DataFrame(question_without_answers)
+    return df_with_answers, df_without_answers
 
 def insert_dataframe_to_redis(df):
     r = redis.Redis(host='localhost', port=6379, db=0, charset="utf-8", decode_responses=True)
@@ -136,9 +146,14 @@ def main():
         os.makedirs(OUTPUT_DIRECTORY)
         
     tag = "nearprotocol"
-    df = create_dataframe(tag)
-    filename = f"{tag}_data.csv"
-    save_dataframe_to_csv(df, os.path.join(OUTPUT_DIRECTORY, filename))
-    insert_dataframe_to_redis(df)
+    df_with, df_without = create_dataframe(tag)
+    filename_with = f"{tag}_data.csv"
+    filename_without = f"{tag}_questions.csv"
+
+    save_dataframe_to_csv(df_with, os.path.join(OUTPUT_DIRECTORY, filename_with))
+    save_dataframe_to_csv(df_without, os.path.join(OUTPUT_DIRECTORY, filename_without))
+    insert_dataframe_to_redis(df_with)
 if __name__ == "__main__":
     main()
+
+    data = []
