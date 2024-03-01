@@ -1,11 +1,12 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
+import json
 from openai import OpenAI
 from pinecone import Pinecone
 import os
 from dotenv import load_dotenv
 import redis
 from utlis.prompt_templates import general_qa_prompt_template
-from config import EMBEDDING_MODEL
+from config import EMBEDDING_MODEL, TEMPERATURE
 load_dotenv()
 
 app = Flask(__name__)
@@ -34,12 +35,8 @@ def get_embedding(text, model):
     return client.embeddings.create(input = [text], model=model).data[0].embedding
 
 
-@app.route('/query', methods=['POST'])
-def query():
-    data = request.get_json()
-    query_text = data.get('query', '')
-
-    query_vector = get_embedding(query_text, model=EMBEDDING_MODEL)
+def generate_stream(prompt):
+    query_vector = get_embedding(prompt, model=EMBEDDING_MODEL)
 
     index = pc.Index(PINECONE_INDEX_NAME, host=PINECONE_HOST)
     query_results = index.query(vector=query_vector, top_k=3)
@@ -51,11 +48,11 @@ def query():
         results.append(value_from_redis)
     result_context = ''.join(results)
     
-    prompt = general_qa_prompt_template.format(client="Near", user_query=query_text, contexts=result_context)
+    general_prompt = general_qa_prompt_template.format(client="Near", user_query=prompt, contexts=result_context)
     client = OpenAI(api_key = OPENAI_API_KEY)
 
-    response = client.chat.completions.create(
-        model="gpt-4-turbo-preview",
+    stream = client.chat.completions.create(
+        model="gpt-3.5-turbo",
         messages=[
             {
                 "role": "system",
@@ -63,12 +60,20 @@ def query():
             },
             {
                 "role": "user",
-                "content": prompt
+                "content": general_prompt
             }
-        ]
+        ],
+        #temperature = TEMPERATURE,
+        stream=True,
     )
-    response_message = response.choices[0].message.content
-    return jsonify({"message": response_message, "redis": result_context})
+    for chunk in stream:
+        if chunk.choices[0].delta.content:
+            yield f"data: {json.dumps(chunk.choices[0].delta.content)}\n\n"
 
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.json
+    prompt = data['prompt']
+    return Response(generate_stream(prompt), mimetype='text/event-stream')
 if __name__ == '__main__':
     app.run(port=5000)

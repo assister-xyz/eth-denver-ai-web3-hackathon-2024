@@ -48,7 +48,7 @@ def fetch_stackoverflow_questions(tag):
     except Exception as e:
         print("Exception while fetching questions:", str(e))
 
-    return all_questions[:10]
+    return all_questions[:50]
 
 def get_accepted_answer(question_id):
     api_url = f"https://api.stackexchange.com/2.3/questions/{question_id}/answers"
@@ -70,10 +70,8 @@ def get_accepted_answer(question_id):
             if len(data["items"]) > 0:
                 accepted_answers = [a for a in data["items"] if a.get("is_accepted", False)]
                 if accepted_answers:
-                    print("Use accepted")
                     return accepted_answers[0]
                 else:
-                    print("Use first")
                     return data["items"][0]
         else:
             print("Error fetching answer for question:", response.status_code)
