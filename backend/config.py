@@ -1,0 +1,5 @@
+OUTPUT_DIRECTORY="tags"
+EMBEDDING_MODEL="text-embedding-ada-002"
+EMBEDDING_ENCODING="cl100k_base"
+TOP_K_VECTORS=1
+OPEN_AI_LLM="gpt-3.5-turbo-0125"
