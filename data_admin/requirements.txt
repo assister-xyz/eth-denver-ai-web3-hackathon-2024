@@ -1,4 +1,3 @@
-flask
 beautifulsoup4
 python-dotenv
 redis
@@ -8,3 +7,5 @@ pandas
 tiktoken==0.1.1
 langchain
 streamlit
+seaborn
+matplotlib

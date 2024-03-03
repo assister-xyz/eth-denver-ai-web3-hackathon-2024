@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 import redis
 from utlis.prompt_templates import general_qa_prompt_template
-from config import EMBEDDING_MODEL, TEMPERATURE
+from config import EMBEDDING_MODEL, TEMPERATURE, TOP_K_VECTORS, OPEN_AI_LLM
 load_dotenv()
 
 app = Flask(__name__)
@@ -39,21 +39,31 @@ def generate_stream(prompt):
     query_vector = get_embedding(prompt, model=EMBEDDING_MODEL)
 
     index = pc.Index(PINECONE_INDEX_NAME, host=PINECONE_HOST)
-    query_results = index.query(vector=query_vector, top_k=3)
+    query_results = index.query(vector=query_vector, top_k=TOP_K_VECTORS
+    )
 
     results = []
+    tags = []
     for result in query_results['matches']:
         most_similar_id = result['id']
         print(most_similar_id)
-        value_from_redis = get_redis_value_by_id(most_similar_id)
-        results.append(value_from_redis)
+        value_from_redis = json.loads(get_redis_value_by_id(most_similar_id))
+        concatenated_string = (
+        "Question Title: " + value_from_redis["Question_Title"].strip() +
+        "; Question: " + value_from_redis["Question_Body"].strip() +
+        "; Tags: " + value_from_redis["Tags"].strip() +
+        "; Answer: " + value_from_redis["Answer_Body"].strip()
+        )
+        tags.append(value_from_redis["Tags"].strip())
+        results.append(concatenated_string)
     result_context = ''.join(results)
         
-    general_prompt = general_qa_prompt_template.format(client="Near", user_query=prompt, contexts=result_context)
+    general_prompt = general_qa_prompt_template.format(tag=tags, user_query=prompt, contexts=result_context)
+
     client = OpenAI(api_key = OPENAI_API_KEY)
 
     stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=OPEN_AI_LLM,
         messages=[
             {
                 "role": "system",

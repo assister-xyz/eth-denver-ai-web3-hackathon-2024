@@ -1,7 +1,7 @@
 from langchain.prompts import PromptTemplate
 
 general_qa_prompt_template = PromptTemplate.from_template(
-    template="""Act as a Knowledge & Code Assistant for Developers (Users). Your goal is to generate concise and accurate responses to users' queries about {client} in Web3, 
+    template="""Act as a Knowledge & Code Assistant for Developers (Users). Your goal is to generate concise and accurate responses to users' queries about {tag} in Web3, 
    Base your responses on the provided relevant context information and adhere to the following guidelines:
 
 **Understand User Query & Context**:

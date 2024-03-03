@@ -1,6 +1,11 @@
-OUTPUT_DIRECTORY="tags"
-EMBEDDING_MODEL="text-embedding-ada-002"
-EMBEDDING_ENCODING="cl100k_base"
-TOP_K_VECTORS=1
-OPEN_AI_LLM="gpt-3.5-turbo-0125"
-TEMPERATURE=0.3
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+OUTPUT_DIRECTORY = os.getenv("OUTPUT_DIRECTORY")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL")
+EMBEDDING_ENCODING = os.getenv("EMBEDDING_ENCODING")
+TOP_K_VECTORS = int(os.getenv("TOP_K_VECTORS")) 
+OPEN_AI_LLM = os.getenv("OPEN_AI_LLM")
+TEMPERATURE = float(os.getenv("TEMPERATURE"))
