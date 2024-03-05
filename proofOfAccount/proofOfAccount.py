@@ -1,12 +1,17 @@
-import streamlit as st
+import os
 
+import streamlit as st
+from web3 import Web3, HTTPProvider
+from eth_account.messages import defunct_hash_message
+from eth_account import Account
 from Contributor import Contributor
 from generator import generate_unique_random_string
 from validateProfile import check_about_section
-
+import streamlit.components.v1 as components
 
 def is_stackoverflow_link(link):
     return link.startswith("https://stackoverflow.com/users/")
+
 
 
 def main():
@@ -38,6 +43,9 @@ def main():
                 if check_about_section(st.session_state.newContributor.stackoverflow_account_link,
                                        st.session_state.newContributor.get_unique_code()):
                     st.success("Success! Your profile has been registered as contributor.")
+
+                    if st.button("Sign"):
+                        open_sign_html()
                     contributors.append(st.session_state.newContributor)
                 else:
                     st.error("Verification failed. Please try again.")
@@ -49,6 +57,10 @@ def main():
             st.warning("Please enter a valid Stack Overflow account link.")
             st.text("Example: https://stackoverflow.com/users/1234567/your-username")
 
+
+def open_sign_html():
+    file_path = os.path.join(os.path.dirname(__file__), "sign.html")
+    os.system(f"start {file_path}")
 
 if __name__ == "__main__":
     main()

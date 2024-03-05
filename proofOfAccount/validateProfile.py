@@ -10,9 +10,7 @@ def check_about_section(stackoverflow_link, unique_code):
         about_section = soup.find('div', class_='js-about-me-content')
         if about_section:
             about_text = about_section.text
-            print(unique_code)
-            myregex = f"Code: {unique_code}"
-            print(repr(myregex), repr(about_text))
+            myregex = f"Contributor Code: {unique_code}"
             code_present = re.search(myregex, about_text)
             return code_present is not None
         else:
