@@ -86,6 +86,10 @@ def generate_stream(prompt):
         if chunk.choices[0].delta.content:
             yield f"data: {json.dumps(chunk.choices[0].delta.content)}\n\n"
 
+@app.route('/health')
+def health_check():
+    return "I am alive!", 200
+
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.json
