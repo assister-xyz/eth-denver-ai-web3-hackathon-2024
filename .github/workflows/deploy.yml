@@ -55,12 +55,12 @@ jobs:
           docker tag "$IMAGE_NAME_FRONTEND:latest" "$ECR_REPO/$IMAGE_NAME_FRONTEND:latest"
           docker push "$ECR_REPO/$IMAGE_NAME_FRONTEND:latest"
           
-      - name: Build and push data-admin image
-        run: |
-          cd data_admin
-          docker build -t "$IMAGE_NAME_DATA_ADMIN:latest" .
-          docker tag "$IMAGE_NAME_DATA_ADMIN:latest" "$ECR_REPO/$IMAGE_NAME_DATA_ADMIN:latest"
-          docker push "$ECR_REPO/$IMAGE_NAME_DATA_ADMIN:latest"
+#      - name: Build and push data-admin image
+#        run: |
+#          cd data_admin
+#          docker build -t "$IMAGE_NAME_DATA_ADMIN:latest" .
+#          docker tag "$IMAGE_NAME_DATA_ADMIN:latest" "$ECR_REPO/$IMAGE_NAME_DATA_ADMIN:latest"
+#          docker push "$ECR_REPO/$IMAGE_NAME_DATA_ADMIN:latest"
 
       - name: Set ECS ROLE
         id: set-ecs-role
