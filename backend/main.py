@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import redis
 from utlis.prompt_templates import general_qa_prompt_template
 from config import EMBEDDING_MODEL, TEMPERATURE, TOP_K_VECTORS, OPEN_AI_LLM
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -16,9 +17,13 @@ PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
 PINECONE_HOST = os.getenv('PINECONE_HOST')
 PINECONE_INDEX_NAME = os.getenv('PINECONE_INDEX_NAME')
 
+REDIS_HOST=os.getenv('REDIS_HOST')
+REDIS_PORT=os.getenv('REDIS_PORT')
+REDIS_PASSWORD=os.getenv('REDIS_PASSWORD')
+
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
-r = redis.Redis(host='localhost', port=6379, db=0, charset="utf-8", decode_responses=True)
+r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, db=0, charset="utf-8", decode_responses=True)
 
 
 def get_redis_value_by_id(most_similar_id):
@@ -86,5 +91,6 @@ def chat():
     data = request.json
     prompt = data['prompt']
     return Response(generate_stream(prompt), mimetype='text/event-stream')
+
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5000)
