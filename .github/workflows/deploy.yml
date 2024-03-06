@@ -1,0 +1,85 @@
+name: "Build and Deploy"
+
+on:
+  workflow_dispatch:  #  Run workflow manually
+    #inputs:
+    #  env:
+    #    description: 'Environment: dev, staging or production'     
+    #    required: true
+  push:
+    branches:
+      - marian_branch
+
+jobs:
+  release:
+    name: Build and Deploy
+    #if: github.ref == 'refs/heads/main' && (github.event.inputs.env == 'staging' || github.event.inputs.env == 'production' || github.event_name == 'push')
+    runs-on: ubuntu-22.04
+    env:
+      ECR_REPO: ${{ vars.ECR_REPO }}
+      IMAGE_NAME_FRONTEND: ${{ vars.IMAGE_NAME_FRONTEND }}
+      IMAGE_NAME_BACKEND: ${{ vars.IMAGE_NAME_BACKEND }}
+      IMAGE_NAME_DATA_ADMIN: ${{ vars.IMAGE_NAME_DATA_ADMIN }}
+    steps:
+      - name: Checkout Marian
+        uses: actions/checkout@v4
+        with:
+          ref: 'marian_branch'
+      
+      - name: AWS Login
+        id: login-aws
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+          aws-region: us-east-1
+      
+      - name: AWS ECR login
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: private
+
+      - name: Build and push backend image
+        run: |
+          cd backend
+          docker build -t "$IMAGE_NAME_BACKEND:latest" .
+          docker tag "$IMAGE_NAME_BACKEND:latest" "$ECR_REPO/$IMAGE_NAME_BACKEND:latest"
+          docker push "$ECR_REPO/$IMAGE_NAME_BACKEND:latest"
+      
+
+      - name: Build and push frontend image
+        run: |
+          cd frontend
+          docker build -t "$IMAGE_NAME_FRONTEND:latest" .
+          docker tag "$IMAGE_NAME_FRONTEND:latest" "$ECR_REPO/$IMAGE_NAME_FRONTEND:latest"
+          docker push "$ECR_REPO/$IMAGE_NAME_FRONTEND:latest"
+          
+      - name: Build and push data-admin image
+        run: |
+          cd data_admin
+          docker build -t "$IMAGE_NAME_DATA_ADMIN:latest" .
+          docker tag "$IMAGE_NAME_DATA_ADMIN:latest" "$ECR_REPO/$IMAGE_NAME_DATA_ADMIN:latest"
+          docker push "$ECR_REPO/$IMAGE_NAME_DATA_ADMIN:latest"
+
+      - name: Set ECS ROLE
+        id: set-ecs-role
+        run: |
+            echo "AWS_ECS_ROLE=${{ secrets.AWS_ECS_ROLE }}" >> $GITHUB_ENV
+            echo "AWS_ECS_NAME=${{ vars.AWS_ECS_CLUSTER_ARN }}" >> $GITHUB_ENV
+
+      - name: AWS ECS login
+        id: login-ecs
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ env.AWS_ECS_ROLE }}
+       
+      - name: Force new image redeploy
+        id: force-redeploy
+        run: |
+          aws ecs update-service --cluster $AWS_ECS_BACKEND --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_BACKEND }} --force-new-deployment
+          aws ecs update-service --cluster $AWS_ECS_FRONTEND --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_FRONTEND }} --force-new-deployment
+          aws ecs update-service --cluster $AWS_ECS_DATAADMIN --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_DATAADMIN }} --force-new-deployment
