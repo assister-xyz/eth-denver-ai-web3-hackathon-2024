@@ -79,6 +79,6 @@ jobs:
       - name: Force new image redeploy
         id: force-redeploy
         run: |
-          aws ecs update-service --cluster $AWS_ECS_BACKEND --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_BACKEND }} --force-new-deployment
-          aws ecs update-service --cluster $AWS_ECS_FRONTEND --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_FRONTEND }} --force-new-deployment
-          aws ecs update-service --cluster $AWS_ECS_DATAADMIN --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_DATAADMIN }} --force-new-deployment
+          aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_BACKEND }} --force-new-deployment
+          aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_FRONTEND }} --force-new-deployment
+          aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_DATAADMIN }} --force-new-deployment
