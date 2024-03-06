@@ -88,7 +88,7 @@ def generate_stream(prompt):
 
 @app.route('/health')
 def health_check():
-    return "I am alive!", 200
+    return "I am alive! But is CI/CD alive?", 200
 
 @app.route('/chat', methods=['POST'])
 def chat():
