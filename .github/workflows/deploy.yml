@@ -75,7 +75,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
           aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ env.AWS_ECS_ROLE }}
        
       - name: Force new image redeploy
         id: force-redeploy
