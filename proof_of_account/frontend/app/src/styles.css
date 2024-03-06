@@ -1,0 +1,92 @@
+/* styles.css */
+.input-container {
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .input-field {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+  
+  .verify-button {
+    padding: 10px;
+    font-size: 16px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .valid-message {
+    color: green;
+    margin-top: 10px;
+  }
+  
+  .invalid-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .lock-button {
+    padding: 10px;
+    font-size: 16px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .code-container {
+    margin-top: 20px;
+  }
+  
+  .code {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .unlock-button {
+    margin-left: 10px;
+    padding: 10px;
+    font-size: 16px;
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .verify-code-button {
+    margin-left: 10px;
+    padding: 10px;
+    font-size: 16px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+    
+  .upvote-button {
+    margin-left: 10px;
+    padding: 10px;
+    font-size: 16px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  
