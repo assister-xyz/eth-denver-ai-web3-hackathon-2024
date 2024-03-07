@@ -77,4 +77,4 @@ jobs:
         run: |
           aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_BACKEND }} --force-new-deployment
           aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_FRONTEND }} --force-new-deployment
-          aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_DATAADMIN }} --force-new-deployment
+          #aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_DATAADMIN }} --force-new-deployment
