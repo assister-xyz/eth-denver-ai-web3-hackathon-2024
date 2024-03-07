@@ -6,17 +6,16 @@ from config import BACKEND_URL
 
 def streamlit_chat(prompt):
     url = BACKEND_URL
-    print("Backend url:", url)
     headers = {"Content-Type": "application/json"}
     data = {"prompt": prompt}
     
-    response = requests.post(url, headers=headers, data=json.dumps(data), stream=True)
+    response = requests.post(url+"/chat", headers=headers, data=json.dumps(data), stream=True)
     
     message_placeholder = st.empty() 
     full_text = ""
     for line in response.iter_lines():
         if line:
-            print(line)
+
             decoded_line = line.decode('utf-8')  
             json_data = json.loads(decoded_line.replace('data: ', ''))
             full_text += json_data  
