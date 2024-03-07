@@ -2,11 +2,7 @@ import redis
 from config import REDIS_HOST, REDIS_PASSWORD, REDIS_PORT
 
 def upsert_dataframe(df):
-    r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT,
-                    password=REDIS_PASSWORD,
-                    db=0, 
-                    charset="utf-8", 
-                    decode_responses=True)
+    r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
     
     unserted_count = 0
     for _, row in df.iterrows():
