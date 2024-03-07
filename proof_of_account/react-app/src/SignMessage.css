@@ -1,0 +1,23 @@
+/* SignMessage.css */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+.sign-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  min-width: 120px;
+  box-sizing: border-box;
+}
+  
+.sign-button:hover  {
+    background-color: #0056b3;
+}

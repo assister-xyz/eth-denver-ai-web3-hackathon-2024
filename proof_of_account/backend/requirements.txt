@@ -1,4 +1,0 @@
-flask
-flask-cors
-bs4
-requests
