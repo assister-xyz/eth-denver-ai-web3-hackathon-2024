@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       ECR_REPO: ${{ vars.ECR_REPO }}
+      AWS_ECS: ${{ vars.AWS_ECS }}
       IMAGE_NAME_FRONTEND: ${{ vars.IMAGE_NAME_FRONTEND }}
       IMAGE_NAME_BACKEND: ${{ vars.IMAGE_NAME_BACKEND }}
       IMAGE_NAME_DATA_ADMIN: ${{ vars.IMAGE_NAME_DATA_ADMIN }}
