@@ -1,11 +1,7 @@
 name: "Build and Deploy"
 
 on:
-  workflow_dispatch:  #  Run workflow manually
-    #inputs:
-    #  env:
-    #    description: 'Environment: dev, staging or production'     
-    #    required: true
+  workflow_dispatch:
   push:
     branches:
       - marian_branch
@@ -13,7 +9,6 @@ on:
 jobs:
   release:
     name: Build and Deploy
-    #if: github.ref == 'refs/heads/main' && (github.event.inputs.env == 'staging' || github.event.inputs.env == 'production' || github.event_name == 'push')
     runs-on: ubuntu-22.04
     env:
       ECR_REPO: ${{ vars.ECR_REPO }}
