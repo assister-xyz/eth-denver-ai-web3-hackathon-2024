@@ -45,9 +45,7 @@ def generate_stream(prompt):
     tags = []
     for result in query_results['matches']:
         most_similar_id = result['id']
-        print(most_similar_id)
         value_from_redis = json.loads(get_redis_value_by_id(most_similar_id))
-        print(value_from_redis)
         concatenated_string = (
         "Question Title: " + value_from_redis["Question_Title"].strip() +
         "; Question: " + value_from_redis["Question_Body"].strip() +

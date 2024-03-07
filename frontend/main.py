@@ -18,11 +18,11 @@ def streamlit_chat(prompt):
     for line in response.iter_lines():
         if line:
             print(line)
-            decoded_line = line.decode('utf-8')  
-            json_data = json.loads(decoded_line.replace('data: ', ''))
-            full_text += json_data  
-            current_text = message_placeholder.write(full_text)  
-            st.session_state['last_message'] = json_data 
+            #decoded_line = line.decode('utf-8')  
+            # json_data = json.loads(decoded_line.replace('data: ', ''))
+            # full_text += json_data  
+            # current_text = message_placeholder.write(full_text)  
+            # st.session_state['last_message'] = json_data 
 
 def main():
     st.set_page_config(
