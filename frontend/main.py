@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 def streamlit_chat(prompt):
     url = os.getenv("BACKEND_URL")
     headers = {"Content-Type": "application/json"}
@@ -16,6 +17,7 @@ def streamlit_chat(prompt):
     full_text = ""
     for line in response.iter_lines():
         if line:
+            print(line)
             decoded_line = line.decode('utf-8')  
             json_data = json.loads(decoded_line.replace('data: ', ''))
             full_text += json_data  

@@ -2,9 +2,13 @@ import streamlit as st
 import pandas as pd
 from utils.database import upsert_dataframe
 import redis
-from config import REDIS_HOST, REDIS_PORT
+from config import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 def database_manager_page():
-    r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
+    r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT,
+                    password=REDIS_PASSWORD,
+                    db=0, 
+                    charset="utf-8", 
+                    decode_responses=True)
     try:
         response = r.ping()
         if response == True:

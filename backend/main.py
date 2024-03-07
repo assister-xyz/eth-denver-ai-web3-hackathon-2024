@@ -47,6 +47,7 @@ def generate_stream(prompt):
         most_similar_id = result['id']
         print(most_similar_id)
         value_from_redis = json.loads(get_redis_value_by_id(most_similar_id))
+        print(value_from_redis)
         concatenated_string = (
         "Question Title: " + value_from_redis["Question_Title"].strip() +
         "; Question: " + value_from_redis["Question_Body"].strip() +
@@ -82,7 +83,6 @@ def generate_stream(prompt):
 
 @app.route('/health')
 def health_check():
-    print(REDIS_HOST, REDIS_PORT)
     return "I am alive! But is CI/CD alive? Check CI/CD v2", 200
 
 @app.route('/ping-redis')
