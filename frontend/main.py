@@ -2,12 +2,11 @@ import streamlit as st
 import requests
 import json
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from config import BACKEND_URL
 
 def streamlit_chat(prompt):
-    url = os.getenv("BACKEND_URL")
+    url = BACKEND_URL
+    print(url)
     headers = {"Content-Type": "application/json"}
     data = {"prompt": prompt}
     
@@ -18,11 +17,11 @@ def streamlit_chat(prompt):
     for line in response.iter_lines():
         if line:
             print(line)
-            #decoded_line = line.decode('utf-8')  
-            # json_data = json.loads(decoded_line.replace('data: ', ''))
-            # full_text += json_data  
-            # current_text = message_placeholder.write(full_text)  
-            # st.session_state['last_message'] = json_data 
+            decoded_line = line.decode('utf-8')  
+            json_data = json.loads(decoded_line.replace('data: ', ''))
+            full_text += json_data  
+            current_text = message_placeholder.write(full_text)  
+            st.session_state['last_message'] = json_data 
 
 def main():
     st.set_page_config(
