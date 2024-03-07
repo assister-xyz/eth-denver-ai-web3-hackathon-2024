@@ -6,7 +6,7 @@ from config import BACKEND_URL
 
 def streamlit_chat(prompt):
     url = BACKEND_URL
-    print(url)
+    print("Backend url:", url)
     headers = {"Content-Type": "application/json"}
     data = {"prompt": prompt}
     
