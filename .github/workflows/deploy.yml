@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - marian_branch
+      - "marian_branch"
 
 jobs:
   release:
