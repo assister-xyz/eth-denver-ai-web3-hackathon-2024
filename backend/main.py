@@ -6,20 +6,14 @@ import os
 from dotenv import load_dotenv
 import redis
 from utlis.prompt_templates import general_qa_prompt_template
-from config import EMBEDDING_MODEL, TEMPERATURE, TOP_K_VECTORS, OPEN_AI_LLM
+from config import (EMBEDDING_MODEL, TEMPERATURE, TOP_K_VECTORS, OPEN_AI_LLM,
+                    PINECONE_API_KEY, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, OPENAI_API_KEY,
+                    PINECONE_INDEX_NAME, PINECONE_HOST)
 
 load_dotenv()
 
 app = Flask(__name__)
 
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
-PINECONE_HOST = os.getenv('PINECONE_HOST')
-PINECONE_INDEX_NAME = os.getenv('PINECONE_INDEX_NAME')
-
-REDIS_HOST=os.getenv('REDIS_HOST')
-REDIS_PORT=os.getenv('REDIS_PORT')
-REDIS_PASSWORD=os.getenv('REDIS_PASSWORD')
 
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
@@ -88,7 +82,19 @@ def generate_stream(prompt):
 
 @app.route('/health')
 def health_check():
+    print(REDIS_HOST, REDIS_PORT)
     return "I am alive! But is CI/CD alive? Check CI/CD v2", 200
+
+@app.route('/ping-redis')
+def ping_redis():
+    try:
+        pong = r.ping()
+        if pong:
+            return "Redis is running!", 200
+        else:
+            return "Error pinging Redis", 500
+    except Exception as e:
+        return str(e), 500
 
 @app.route('/chat', methods=['POST'])
 def chat():
