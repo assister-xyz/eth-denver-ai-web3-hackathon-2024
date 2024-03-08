@@ -6,7 +6,7 @@ const SignMessage = ({ initialMessage, onSignMessage }) => {
   const message = initialMessage;
   const [signedMessage, setSignedMessage] = useState('');
   const [response, setResponse] = useState(null);
-  const [tokenAdded, setTokenAdded] = useState(false); // State to track token addition
+  const [tokenAdded, setTokenAdded] = useState(false); 
   const tokenAddress = '0xd00981105e61274c8a5cd5a88fe7e037d935b513';
   const tokenSymbol = 'UVR';
   const tokenDecimals = 18;
@@ -33,7 +33,7 @@ const SignMessage = ({ initialMessage, onSignMessage }) => {
 
       if (wasAdded) {
         console.log('Thanks for your interest!');
-        setTokenAdded(true); // Set tokenAdded to true if added successfully
+        setTokenAdded(true); 
       } else {
         console.log('Your loss!');
       }
