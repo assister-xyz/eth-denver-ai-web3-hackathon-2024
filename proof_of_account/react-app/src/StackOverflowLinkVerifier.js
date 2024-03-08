@@ -17,27 +17,28 @@ function StackOverflowLinkVerifier() {
 
   const isStackOverflowLink = (link) => {
     const regex = /^https:\/\/stackoverflow\.com\/users\/(\d+)(\/[-_a-zA-Z0-9]+)?$/;
-    const match = link.match(regex);
-    if (match) {
-      return true;
-    }
-    return false;
+    return regex.test(link);
   };
 
-  const handleVerify = () => {
-    setIsValid(isStackOverflowLink(link));
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setLink(value);
+    setIsValid(isStackOverflowLink(value));
   };
 
   const handleLock = () => {
-    setLocked(true);
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < 20; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    if (isValid) {
+      setLocked(true);
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < 20; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      setCode(result);
     }
-    setCode(result);
   };
 
+  
   const handleUnlock = () => {
     setLocked(false);
     setCode('');
@@ -50,7 +51,7 @@ function StackOverflowLinkVerifier() {
       code: code
     };
 
-    fetch(`${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/verify-stackoverflow`, { // Using env variable for host
+    fetch(`${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/verify-stackoverflow`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -78,7 +79,7 @@ function StackOverflowLinkVerifier() {
       tag: 'nearprotocol'
     };
 
-    fetch(`${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/total-upvotes`, { // Using env variable for host
+    fetch(`${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/total-upvotes`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -102,78 +103,72 @@ function StackOverflowLinkVerifier() {
 
   return (
     <div className="container">
-      <div className="input-container">
-        <input
-          className="input-field"
-          type="text"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-          placeholder="Enter Stack Overflow Profile Link"
-          disabled={locked}
-        />
+    <div className="input-container">
+    <input
+      className={`input-field ${isValid ? 'shrink' : ''}`} // Dummy
+      type="text"
+      value={link}
+      onChange={handleInputChange}
+      placeholder="Enter Stack Overflow Profile Link"
+      disabled={locked}
+    />
+      {isValid && !locked && (
         <button
-          className="verify-button"
-          onClick={handleVerify}
-          disabled={locked}
+          className="lock-button"
+          onClick={handleLock}
         >
-          Verify Link
+          Lock
         </button>
-        <br />
-        {isValid ? (
-          <p className="valid-message">Valid Stack Overflow Profile Link</p>
-        ) : (
-          <p className="invalid-message">Invalid Stack Overflow Profile Link</p>
-        )}
-        {isValid && !locked && (
-          <div>
-            <button
-              className="lock-button"
-              onClick={handleLock}
-            >
-              Lock
-            </button>
-          </div>
-        )}
-      </div>
+      )}
+      {locked && (
+        <button
+          className="lock-button"
+          disabled
+        >
+          Locked
+        </button>
+      )}
+    </div>
 
       {locked && (
-        <div className="locked-container">
-          <div className="code-container">
+         <div className="locked-container">
+         <div className="code-container">
+           <p className="about-text">
+             Please add the following text to your about section on Stack Overflow
+           </p>
+           <div class="code-background">
             <code className="code">Code: {code}</code>
-            <button
-              className="unlock-button"
-              onClick={handleUnlock}
-            >
-              Unlock
-            </button>
-            <button
-              className="verify-code-button"
-              onClick={handleVerifyStackOverflow}
-            >
-              Verify Code
-            </button>
-            <button
-              className="upvote-button"
-              onClick={handleTotalUpvotes}
-            >
-              Total Upvotes
-            </button>
-            {totalUpvotes !== null && (
-              <p className="total-upvotes">Total Upvotes: {totalUpvotes}</p>
-            )}
-            {verificationResult !== null && (
-              <>
-                <p className="verification-result">
-                  {verificationResult === 'Success' ? 'Success' : 'Failed to verify'}
-                </p>
-                {verificationResult === 'Success' && <div>
-                  <SignMessage initialMessage={link} onSignMessage={handleSignMessage} />
-                </div>}
-                
-              </>
-            )}
-          </div>
-        </div>
+           </div>
+           <button className="unlock-button" onClick={handleUnlock}>
+             Unlock
+           </button>
+           <button className="verify-code-button" onClick={handleVerifyStackOverflow}>
+             Verify Code
+           </button>
+           <button className="upvote-button" onClick={handleTotalUpvotes}>
+             Total Upvotes
+           </button>
+           {totalUpvotes !== null && (
+            <div class="upvotes-background">
+             <p className="total-upvotes">Total Upvotes: {totalUpvotes}</p>
+            </div>
+           )}
+           {verificationResult !== null && (
+             <>
+             <div class="verification-background"> 
+               <p className={verificationResult === 'Success' ? 'success' : 'verification-result'}>
+                 {verificationResult === 'Success' ? 'Success' : 'Failed to verify'}
+               </p>
+              </div>
+               {verificationResult === 'Success' && (
+                 <div>
+                   <SignMessage initialMessage={link} onSignMessage={handleSignMessage} />
+                 </div>
+               )}
+             </>
+           )}
+         </div>
+       </div>
       )}
     </div>
   );

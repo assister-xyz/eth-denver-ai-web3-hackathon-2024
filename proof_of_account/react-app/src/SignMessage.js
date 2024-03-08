@@ -51,18 +51,20 @@ const SignMessage = ({ initialMessage, onSignMessage }) => {
   };
 
   return (
-    <div className="container">
+    <div className="container-1">
       <button
         className="sign-button"
         onClick={signMessage}>Sign Message and Get Reward
       </button>
       {signedMessage && (
-        <p>Signed Message: {signedMessage}</p>
+        <p className="signed-message">Signed Message: {signedMessage}</p>
       )}
       {response && (
         <div className="response-container">
-          <p>{response.message}</p>
+          <p className="response-message">{response.message}</p>
+          <div class="link1">
           <a href={response.link} target="_blank" rel="noopener noreferrer">View Transaction</a>
+          </div>
         </div>
       )}
     </div>
