@@ -1,4 +1,4 @@
-/* StackOverflowLinkVerifier.css  */
+/* StackOverflowLinkVerifier.css */
 
 .container {
   width: calc(100% - 300px);
@@ -91,7 +91,7 @@
   font-style: bold;
   opacity: 0;
   animation: fadeIn 1s ease forwards;
-  width: 500px; 
+  width: 600px; 
 }
 
 @keyframes fadeIn {

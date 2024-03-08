@@ -4,11 +4,16 @@
   align-items: center;
   padding: 20px;
   margin-top: 10px;
-  background-color: white; 
+  background-color: white;
   border-radius: 20px;
 }
-.sign-button {
 
+.container-2 {
+  display: flex;
+  flex-direction: row;
+}
+
+.sign-button {
   align-self: center;
   background-color: #007bff;
   color: white;
@@ -21,15 +26,6 @@
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .sign-button:hover {
   background-color: #0056b3;
 }
@@ -37,31 +33,53 @@
 .signed-message {
   margin-top: 20px;
   font-weight: bold;
-  word-wrap: break-word; /* Wrap long words */
-  overflow-wrap: break-word; /* Wrap on overflow */
-  max-width: 100%; /* Limit width to container */
-  text-align: left; /* Align text to the left */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  text-align: left;
   animation: fadeIn 1s ease forwards;
 }
+
 .response-message {
   font-weight: bold;
-  word-wrap: break-word; /* Wrap long words */
-  overflow-wrap: break-word; /* Wrap on overflow */
-  max-width: 100%; /* Limit width to container */
-  text-align: left; 
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  text-align: left;
   animation: fadeIn 1s ease forwards;
 }
 
 .link1 {
-margin-top: 30px;
+  margin-top: 30px;
+  margin-left: 300px;
 }
 
 .response-container {
   margin-top: px;
+  text-align: left;
+  margin-right: 100px;
 }
 
 .response-container p {
   margin-bottom: 10px;
+}
+
+.add-token-button {
+  margin-left: -0px;
+  margin-right: 200px;
+  background-color: #007bff;
+  color: white;
+  border: 2px solid #007bff;
+  padding: 11px 64px;
+  border-radius: 20px;
+  cursor: pointer;
+  min-width: 200px;
+  animation: fadeIn 1s ease forwards;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.add-token-button:hover {
+  background-color: #0056b3;
 }
 
 .response-container a {

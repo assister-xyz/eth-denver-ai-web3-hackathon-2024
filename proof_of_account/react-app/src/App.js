@@ -5,7 +5,7 @@ import StackOverflowLinkVerifier from './StackOverflowLinkVerifier';
 function App() {
   return (
     <div className="App">
-      <h1>Stack Overflow Link Verifier</h1>
+      <h1>Register as contributor</h1>
       <StackOverflowLinkVerifier />  
     </div>
   );

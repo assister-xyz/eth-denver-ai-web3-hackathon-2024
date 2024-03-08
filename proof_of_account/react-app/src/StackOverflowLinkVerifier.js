@@ -109,7 +109,7 @@ function StackOverflowLinkVerifier() {
       type="text"
       value={link}
       onChange={handleInputChange}
-      placeholder="Enter Stack Overflow Profile Link"
+      placeholder="Enter Stack Overflow Profile Link To Register"
       disabled={locked}
     />
       {isValid && !locked && (
@@ -134,7 +134,7 @@ function StackOverflowLinkVerifier() {
          <div className="locked-container">
          <div className="code-container">
            <p className="about-text">
-             Please add the following text to your about section on Stack Overflow
+             Please add the following text to your about section on your Stack Overflow account
            </p>
            <div class="code-background">
             <code className="code">Code: {code}</code>

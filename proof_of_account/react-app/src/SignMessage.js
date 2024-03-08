@@ -6,10 +6,47 @@ const SignMessage = ({ initialMessage, onSignMessage }) => {
   const message = initialMessage;
   const [signedMessage, setSignedMessage] = useState('');
   const [response, setResponse] = useState(null);
+  const [tokenAdded, setTokenAdded] = useState(false); // State to track token addition
+  const tokenAddress = '0xd00981105e61274c8a5cd5a88fe7e037d935b513';
+  const tokenSymbol = 'UVR';
+  const tokenDecimals = 18;
+  const tokenImage = 'https://static.thenounproject.com/png/341245-200.png';
+
+  const AddUVRToken = async () => {
+    try {
+      if (typeof window.ethereum === 'undefined') {
+        throw new Error('MetaMask or other Ethereum wallet provider not detected.');
+      }
+
+      const wasAdded = await window.ethereum.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20',
+          options: {
+            address: tokenAddress,
+            symbol: tokenSymbol,
+            decimals: tokenDecimals,
+            image: tokenImage,
+          },
+        },
+      });
+
+      if (wasAdded) {
+        console.log('Thanks for your interest!');
+        setTokenAdded(true); // Set tokenAdded to true if added successfully
+      } else {
+        console.log('Your loss!');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const signMessage = async () => {
     try {
-      if (!window.ethereum) throw new Error('No crypto wallet found. Please install it.');
+      if (typeof window.ethereum === 'undefined') {
+        throw new Error('No crypto wallet found. Please install it.');
+      }
 
       await window.ethereum.request({ method: 'eth_requestAccounts' });
 
@@ -22,7 +59,7 @@ const SignMessage = ({ initialMessage, onSignMessage }) => {
       console.log('Signed Message:', signature);
 
       const data = {
-        user_id: message, 
+        user_id: message,
         signature: signature
       };
 
@@ -52,21 +89,30 @@ const SignMessage = ({ initialMessage, onSignMessage }) => {
 
   return (
     <div className="container-1">
+      <div className="container-2">
       <button
-        className="sign-button"
-        onClick={signMessage}>Sign Message and Get Reward
-      </button>
+        className="add-token-button"
+        onClick={() => { AddUVRToken(); }}>Add UVR Token
+      </button> 
+      {tokenAdded && ( 
+        <button
+          className="sign-button"
+          onClick={() => { signMessage(); }}>Sign Message and Get Reward
+        </button>
+      )}
+      </div>
       {signedMessage && (
         <p className="signed-message">Signed Message: {signedMessage}</p>
       )}
       {response && (
         <div className="response-container">
           <p className="response-message">{response.message}</p>
-          <div class="link1">
-          <a href={response.link} target="_blank" rel="noopener noreferrer">View Transaction</a>
+          <div className="link1">
+            <a href={response.link} target="_blank" rel="noopener noreferrer">View Transaction</a>
           </div>
         </div>
       )}
+      
     </div>
   );
 };

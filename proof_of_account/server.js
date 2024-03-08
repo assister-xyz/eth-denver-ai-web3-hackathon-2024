@@ -112,8 +112,11 @@ async function mintTokens(receiver, amount) {
       const tx = await contract.mint(receiver, amount);
 
       await tx.wait();
-      console.log(`Successfully minted ${amount} tokens for ${receiver}`);
-      return { success: true, message: `Successfully minted ${amount} tokens for ${receiver}`, link: "https://mumbai.polygonscan.com/tx/"+tx["hash"] };
+      const normalizedAmount = amount / 10**18;
+
+      console.log(`Successfully minted ${normalizedAmount} tokens for ${receiver}`);
+      // TODO: Normilise amount of shown tokens
+      return { success: true, message: `Successfully minted ${normalizedAmount} tokens for ${receiver}`, link: "https://mumbai.polygonscan.com/tx/"+tx["hash"] };
   } catch (error) {
       console.error("Error minting tokens:", error);
       return { success: false, message: "Error minting tokens" };
