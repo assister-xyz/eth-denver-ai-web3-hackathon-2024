@@ -24,11 +24,11 @@ def streamlit_chat(prompt):
 
 def main():
     st.set_page_config(
-        page_title="Assisterr Chat",
+        page_title="Assisterr Chat (ETH Denver 2024)",
         page_icon="",
         menu_items={}
     )
-    st.title("Assisterr Chat")
+    st.title("Assisterr Chat (ETH Denver 2024)")
     prompt = st.text_input("Enter your question:")
     if st.button("Send"):
         streamlit_chat(prompt)
