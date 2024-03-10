@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import './SignMessage.css';
 const { ethers } = require("ethers");
 
+
 const SignMessage = ({ initialMessage, onSignMessage }) => {
   const message = initialMessage;
   const [signedMessage, setSignedMessage] = useState('');
   const [response, setResponse] = useState(null);
   const [tokenAdded, setTokenAdded] = useState(false); 
-  const tokenAddress = '0xd00981105e61274c8a5cd5a88fe7e037d935b513';
+  const tokenAddress = "0xe5E015E8cFECffeEA938e9137A6B6B01D13B5Dd9";
   const tokenSymbol = 'UVR';
   const tokenDecimals = 18;
   const tokenImage = 'https://static.thenounproject.com/png/341245-200.png';
@@ -101,9 +102,9 @@ const SignMessage = ({ initialMessage, onSignMessage }) => {
         </button>
       )}
       </div>
-      {signedMessage && (
+      {/* {signedMessage && (
         <p className="signed-message">Signed Message: {signedMessage}</p>
-      )}
+      )} */}
       {response && (
         <div className="response-container">
           <p className="response-message">{response.message}</p>
