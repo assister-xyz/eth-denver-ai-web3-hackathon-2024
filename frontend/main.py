@@ -2,14 +2,13 @@ import streamlit as st
 import requests
 import json
 import os
-from config import BACKEND_URL
+from config import BACKEND_URL, CONTRIBUTOR_URL
 
 def streamlit_chat(prompt):
-    url = BACKEND_URL
     headers = {"Content-Type": "application/json"}
     data = {"prompt": prompt}
     
-    response = requests.post(url+"/chat", headers=headers, data=json.dumps(data), stream=True)
+    response = requests.post(BACKEND_URL+"/chat", headers=headers, data=json.dumps(data), stream=True)
     
     message_placeholder = st.empty() 
     full_text = ""
@@ -30,7 +29,12 @@ def main():
     )
     st.title("Assisterr Chat (ETH Denver 2024)")
     prompt = st.text_input("Enter your question:")
-    if st.button("Send"):
+    col1, _, col2 = st.columns([0.3,0.4,0.3])
+    with col1:
+        chat_button_clicked = st.button("Send", use_container_width=True)
+    with col2:
+        st.link_button("Are You a contributor?", CONTRIBUTOR_URL, use_container_width=True)
+    if chat_button_clicked:
         streamlit_chat(prompt)
 
 if __name__ == "__main__":
