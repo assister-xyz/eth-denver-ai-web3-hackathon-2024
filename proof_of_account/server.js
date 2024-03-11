@@ -144,7 +144,9 @@ app.post('/get-tokens', async (req, res) => { // add amount
   }
 });
 
-
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'UP' });
+});
 
 const port  = 3001;
 app.listen(port, () => {
