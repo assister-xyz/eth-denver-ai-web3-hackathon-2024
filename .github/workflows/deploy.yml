@@ -70,7 +70,7 @@ jobs:
       - name: Build and push POA frontend image
         run: |
           cd proof_of_account/react-app
-          docker build --build-arg REACT_APP_HOST=$REACT_APP_HOST --build-arg REACT_APP_PORT=$REACT_APP_PORT --build-arg REACT_APP_CONTRACT_ADDRESS=$REACT_APP_CONTRACT_ADDRESS -t "$IMAGE_NAME_POA_FRONTEND:latest" .
+          docker build --build-arg REACT_APP_HOST=${{ vars.REACT_APP_HOST }} --build-arg REACT_APP_PORT=${{ vars.REACT_APP_PORT }} --build-arg REACT_APP_CONTRACT_ADDRESS=${{ vars.REACT_APP_CONTRACT_ADDRESS }} -t "$IMAGE_NAME_POA_FRONTEND:latest" .
           docker tag "$IMAGE_NAME_POA_FRONTEND:latest" "$ECR_REPO/$IMAGE_NAME_POA_FRONTEND:latest"
           docker push "$ECR_REPO/$IMAGE_NAME_POA_FRONTEND:latest"
 
