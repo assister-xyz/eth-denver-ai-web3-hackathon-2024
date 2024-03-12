@@ -70,10 +70,7 @@ jobs:
       - name: Build and push POA frontend image
         run: |
           cd proof_of_account/react-app
-          export REACT_APP_HOST="elb-eth-denver-poa-be-195558111.us-east-1.elb.amazonaws.com"
-          export REACT_APP_PORT="3001"
-          export REACT_APP_CONTRACT_ADDRESS="0xdb95256f6476fd93794aff06A54EA601fC3C0EAC"
-          docker build -t "$IMAGE_NAME_POA_FRONTEND:latest" .
+          docker build -e REACT_APP_HOST -e REACT_APP_PORT -e REACT_APP_CONTRACT_ADDRESS -t "$IMAGE_NAME_POA_FRONTEND:latest" .
           docker tag "$IMAGE_NAME_POA_FRONTEND:latest" "$ECR_REPO/$IMAGE_NAME_POA_FRONTEND:latest"
           docker push "$ECR_REPO/$IMAGE_NAME_POA_FRONTEND:latest"
 
@@ -97,5 +94,5 @@ jobs:
           aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_BACKEND }} --force-new-deployment
           aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_FRONTEND }} --force-new-deployment
           aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_DATAADMIN }} --force-new-deployment
-          #aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_POA_BACKEND }} --force-new-deployment
-          #aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_POA_FRONTEND }} --force-new-deployment
+          aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_POA_BACKEND }} --force-new-deployment
+          aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_POA_FRONTEND }} --force-new-deployment
