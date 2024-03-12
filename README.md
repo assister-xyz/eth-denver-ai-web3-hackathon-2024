@@ -24,11 +24,10 @@ To tackle this challenge, we have built an incentive-driven framework that encou
 
 -   **Upvote Reward Token** - UVR token is used to incentivize valuable contributions and their Validation by the community. For the Hackathon, we created at Polygon Mumbai Testnet UVR ERC20 token that is minted as a reward. If a developer wants to claim rewards, he must submit a Proof of Account. That means he needs to prove that he is the owner of the StackOverlow account. That can be done by putting a code in the About section of his StackOverflow account. After that, he would need to provide his address on which UVR token rewards would be sent. To do it, he needs to pass the Proof of Wallet procedure by signing (do sign) his StackOverflow user_id with his Wallet (MetaMask). The UVR tokens would be minted at his wallet address. The amount of tokens minted equals the sum of all upvotes in that particular tag.
 
-![](https://t9005183185.p.clickup-attachments.com/t9005183185/811dfcda-a66b-46a4-a697-31e7b20d626d/assisterr_eth_denver_hackathon_rewards.drawio.png)
+
+[<img src="proof_of_address.png">]([https://link-to-your-URL/](https://raw.githubusercontent.com/assister-xyz/eth-denver-ai-web3-hackathon-2024/main/proof_of_address.png)
 
 -   **RAG model** - The AI part of our solution utilizes the RAG model. Which provides efficient data inference compared to model finetuning. The retriever component is the Pinecone Vector Database, where every vector is a scraped question/answer pair from StackOverflow's "near protocol" tag. Content is categorized by topic/area/programming language and inserted in a database. That also enables **provable training functionality**, since every vector represents a traceable content chunk. When a developer asks a question, a similarity search is performed on a vector database where question/answer semantics are taken into consideration. With the most similar answers, LLM (ChatGPT 4.0) is poked to structure a fine answer to the developer.
 
-
-
-![](https://t9005183185.p.clickup-attachments.com/t9005183185/d49e7bb2-1269-414c-9dc6-91cc320b12f8/proof%20of%20wallet.png)
+[<img src="proof_of_wallet.png">](https://raw.githubusercontent.com/assister-xyz/eth-denver-ai-web3-hackathon-2024/main/proof_of_wallet.png)
 
