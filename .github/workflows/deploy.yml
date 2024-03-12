@@ -16,6 +16,8 @@ jobs:
       IMAGE_NAME_FRONTEND: ${{ vars.IMAGE_NAME_FRONTEND }}
       IMAGE_NAME_BACKEND: ${{ vars.IMAGE_NAME_BACKEND }}
       IMAGE_NAME_DATA_ADMIN: ${{ vars.IMAGE_NAME_DATA_ADMIN }}
+      IMAGE_NAME_POA_FRONTEND: ${{ vars.IMAGE_NAME_POA_FRONTEND }}
+      IMAGE_NAME_POA_BACKEND: ${{ vars.IMAGE_NAME_POA_BACKEND }}
     steps:
       - name: Checkout Marian
         uses: actions/checkout@v4
@@ -58,6 +60,20 @@ jobs:
           docker tag "$IMAGE_NAME_DATA_ADMIN:latest" "$ECR_REPO/$IMAGE_NAME_DATA_ADMIN:latest"
           docker push "$ECR_REPO/$IMAGE_NAME_DATA_ADMIN:latest"
 
+      - name: Build and push POA backend image
+        run: |
+          cd proof_of_account
+          docker build -t "$IMAGE_NAME_POA_BACKEND:latest" .
+          docker tag "$IMAGE_NAME_POA_BACKEND:latest" "$ECR_REPO/$IMAGE_NAME_POA_BACKEND:latest"
+          docker push "$ECR_REPO/$IMAGE_NAME_POA_BACKEND:latest"
+
+      - name: Build and push POA frontend image
+        run: |
+          cd proof_of_account/react-app
+          docker build -t "$IMAGE_NAME_POA_FRONTEND:latest" .
+          docker tag "$IMAGE_NAME_POA_FRONTEND:latest" "$ECR_REPO/$IMAGE_NAME_POA_FRONTEND:latest"
+          docker push "$ECR_REPO/$IMAGE_NAME_POA_FRONTEND:latest"
+
       - name: Set ECS ROLE
         id: set-ecs-role
         run: |
@@ -78,3 +94,5 @@ jobs:
           aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_BACKEND }} --force-new-deployment
           aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_FRONTEND }} --force-new-deployment
           aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_DATAADMIN }} --force-new-deployment
+          #aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_POA_BACKEND }} --force-new-deployment
+          #aws ecs update-service --cluster $AWS_ECS --region ${{ vars.AWS_REGION }} --service ${{ vars.AWS_ECS_POA_FRONTEND }} --force-new-deployment
