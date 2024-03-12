@@ -8,7 +8,7 @@ const SignMessage = ({ initialMessage, onSignMessage }) => {
   const [signedMessage, setSignedMessage] = useState('');
   const [response, setResponse] = useState(null);
   const [tokenAdded, setTokenAdded] = useState(false); 
-  const tokenAddress = "0xe5E015E8cFECffeEA938e9137A6B6B01D13B5Dd9";
+  const tokenAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
   const tokenSymbol = 'UVR';
   const tokenDecimals = 18;
   const tokenImage = 'https://static.thenounproject.com/png/341245-200.png';

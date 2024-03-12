@@ -4,3 +4,4 @@
 venv
 __pycache__
 tags
+node_modules
