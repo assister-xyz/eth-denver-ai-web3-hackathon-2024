@@ -18,7 +18,7 @@ Over the last year, LLMs have empowered real-time conversational chatbot support
 
 To tackle this challenge, we have built an incentive-driven framework that encourages the community to contribute by answering questions at the StackExchange-style interface.
 
-![[<img src="[path/to/image.png](https://t9005183185.p.clickup-attachments.com/t9005183185/c77ff11d-5003-480a-95e5-6c07b646a7b0/assisterr_eth_denver_hackathon_arch.drawio.png)">]](https://t9005183185.p.clickup-attachments.com/t9005183185/c77ff11d-5003-480a-95e5-6c07b646a7b0/assisterr_eth_denver_hackathon_arch.drawio.png)
+[<img src="architecture.png">](https://raw.githubusercontent.com/assister-xyz/eth-denver-ai-web3-hackathon-2024/main/architecture.png)
 
 **Our framework consists from:**
 
