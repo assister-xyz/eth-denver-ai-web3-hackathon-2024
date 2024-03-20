@@ -1,4 +1,5 @@
 from flask import Flask, request, Response
+from flask_cors import CORS
 import json
 from openai import OpenAI
 from pinecone import Pinecone
@@ -13,7 +14,7 @@ from config import (EMBEDDING_MODEL, TEMPERATURE, TOP_K_VECTORS, OPEN_AI_LLM,
 load_dotenv()
 
 app = Flask(__name__)
-
+CORS(app)
 
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
