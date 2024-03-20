@@ -1,14 +1,23 @@
 from config import EMBEDDING_ENCODING, MAX_EMBEDDING_TOKENS, OPENAI_API_KEY, EMBEDDING_MODEL, PINECONE_API_KEY, PINECONE_HOST, PINECONE_INDEX_NAME
 import tiktoken
-from openai import OpenAI
+from openai import OpenAI, APIConnectionError
 import pandas as pd
 from pinecone import Pinecone
+
+
+def check_openai_api_key(client):
+    try:
+        client.models.list()
+    except APIConnectionError as e:
+        return False
+    else:
+        return True
 
 def get_embedding(text, client, model = EMBEDDING_MODEL):
     text = text.replace("\n", " ")
     return client.embeddings.create(input = [text], model=model).data[0].embedding
 
-def vectorize(df):
+def vectorize(df, api_key):
     vectorization_columns = ["Question_ID", "Question_Title", "Question_Body", "Tags", "Answer_Body"]
     temp_df = df[vectorization_columns]
     temp_df = temp_df.dropna()
@@ -22,8 +31,9 @@ def vectorize(df):
     temp_df["n_tokens"] = temp_df["Combined"].apply(lambda x: len(encoding.encode(x)))
     temp_df = temp_df[temp_df.n_tokens <= MAX_EMBEDDING_TOKENS]
 
-    client = OpenAI(api_key = OPENAI_API_KEY)
-
+    client = OpenAI(api_key = api_key)
+    if not check_openai_api_key(client):
+        return df
     temp_df['Embeddings'] = temp_df["Combined"].apply(lambda x: get_embedding(x, client, model=EMBEDDING_MODEL))
     df = pd.merge(df, temp_df[["Question_ID", "Combined", "Embeddings"]], on="Question_ID", how="left")
 
