@@ -1,4 +1,4 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
 import json
 from openai import OpenAI
@@ -80,6 +80,48 @@ def generate_stream(prompt):
         if chunk.choices[0].delta.content:
             yield f"data: {json.dumps(chunk.choices[0].delta.content)}\n\n"
 
+def generate_chat_completion(prompt):
+    query_vector = get_embedding(prompt, model=EMBEDDING_MODEL)
+
+    index = pc.Index(PINECONE_INDEX_NAME, host=PINECONE_HOST)
+    query_results = index.query(vector=query_vector, top_k=TOP_K_VECTORS)
+
+    results = []
+    tags = []
+    for result in query_results['matches']:
+        most_similar_id = result['id']
+        value_from_redis = json.loads(get_redis_value_by_id(most_similar_id))
+        concatenated_string = (
+            "Question Title: " + value_from_redis["Question_Title"].strip() +
+            "; Question: " + value_from_redis["Question_Body"].strip() +
+            "; Tags: " + value_from_redis["Tags"].strip() +
+            "; Answer: " + value_from_redis["Answer_Body"].strip()
+        )
+        tags.append(value_from_redis["Tags"].strip())
+        results.append(concatenated_string)
+    result_context = ''.join(results)
+
+    general_prompt = general_qa_prompt_template.format(tag=tags, user_query=prompt, contexts=result_context)
+
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    completion = client.chat.completions.create(
+        model=OPEN_AI_LLM,
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a helpful assistant."
+            },
+            {
+                "role": "user",
+                "content": general_prompt
+            }
+        ],
+        #temperature=TEMPERATURE,
+    )
+    return completion.choices[0].message.content
+
+
 @app.route('/health')
 def health_check():
     return "I am alive! But is CI/CD alive? Check CI/CD v2", 200
@@ -100,6 +142,14 @@ def chat():
     data = request.json
     prompt = data['prompt']
     return Response(generate_stream(prompt), mimetype='text/event-stream')
+
+@app.route('/chat-completion', methods=['POST'])
+def chat_no_stream():
+    data = request.json
+    prompt = data['prompt']
+    completion = generate_chat_completion(prompt)
+    return jsonify({"response": completion})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
