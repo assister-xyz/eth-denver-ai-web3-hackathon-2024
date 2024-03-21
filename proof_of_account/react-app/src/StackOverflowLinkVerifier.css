@@ -1,0 +1,196 @@
+/* StackOverflowLinkVerifier.css */
+
+.container {
+  width: calc(100% - 300px);
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #f8f9fa;
+}
+
+.input-container {
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  align-items: center; 
+}
+
+.input-field {
+  flex: 1; 
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  box-sizing: border-box;
+  transition: width 0.5s ease-out; 
+}
+
+.input-field.shrink {
+  width: calc(100% - 140px); 
+}
+
+.lock-button {
+  background-color: #007bff;
+  color: white;
+  border: 2px solid #007bff;
+  padding: 12px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  min-width: 120px;
+  margin-left: 20px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.lock-button:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.lock-button:active {
+  background-color: #0e1489;
+  border-color: #0056b3;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.locked-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.code-container {
+  margin-top: 0px;
+  padding: 20px;
+  background-color: #e9ecef;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 760px; 
+}
+
+.about-text {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 280px;
+  font-style: bold;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  width: 600px; 
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.code-background {
+  animation: fadeIn 1s ease forwards;
+  display: inline-block;
+  padding: 5px; 
+  background-color: #b5b7b8;
+  border-radius: 10px;
+  text-align: center; 
+}
+
+.code {
+  animation: fadeIn 1s ease forwards;
+  font-family: monospace;
+  background-color: #b5b7b8;
+  user-select: all; 
+}
+
+.unlock-button,
+.verify-code-button,
+.upvote-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 50px; 
+  background-color: #007bff;
+  color: white;
+  border: 2px solid #007bff;
+  padding: 12px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  min-width: 120px;
+  animation: fadeIn 1s ease forwards;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.unlock-button {
+  margin-left: 100px;
+}
+.unlock-button:hover,
+.verify-code-button:hover,
+.upvote-button:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.unlock-button:active,
+.verify-code-button:active,
+.upvote-button:active {
+  background-color: #0e1489;
+  border-color: #0056b3;
+}
+
+
+.total-upvotes {
+  margin-top: 20px;
+  font-weight: bold;
+  animation: fadeIn 1s ease forwards;
+}
+
+.success {
+  color: #44c02b;
+  animation: fadeIn 1s ease forwards;
+  font-weight: bold;
+}
+
+.verification-result {
+  margin: 0; 
+  animation: fadeIn 1s ease forwards;
+  color: #dc3545;
+}
+
+
+.verification-background {
+  padding: 5px; 
+  background-color: #ffffff; 
+  border-radius: 10px;
+  text-align: center; 
+  animation: fadeIn 1s ease forwards;
+}
+
+.upvotes-background {
+  padding: 1px; 
+  background-color: #ffffff; 
+  border-radius: 10px;
+  margin-bottom: 10px;
+  text-align: center; 
+  animation: fadeIn 1s ease forwards;
+}
+
+.verification-result.success {
+  color: #28a745;
+  animation: fadeIn 1s ease forwards;
+}

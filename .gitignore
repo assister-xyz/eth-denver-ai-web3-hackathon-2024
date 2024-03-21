@@ -1,0 +1,7 @@
+.env
+.venv
+.idea
+venv
+__pycache__
+tags
+node_modules
